@@ -17,76 +17,67 @@
 
 from sys import argv
 
-entering = "abęc1ññ"
-print(len(entering), entering)
-print((entering.encode('utf-8')))
 
-print(len(list(entering.encode('utf-8'))), list(entering.encode('utf-8')))
-
-lis = [hex(i) for i in list(entering.encode('utf-8'))]
-print("hex", lis)
-
-lis = [bin(i)[2:].rjust(8, '0') for i in list(entering.encode('utf-8'))]
-print("binary", lis)
-
-#print(("\xe0\xb4\xa4".encode('utf-8')))
-#print(type("\xe0\xb4\xa4"))
-# print(bytes('ñ'.encode()))
-# str0 = (12, 500, 345, 1000, 123223121231)
-# str1 = bytearray([0b011111, 0x00, 0x00, 0x00, 0x08, 0x00, \xe0\xb4\xa4])
-# count = 7
-# res = ["<1>","<2>"]
-# print(str1.decode('utf-8'))
-# for i in str1:
-#     print(len(list(str(i).encode('utf-8'))))
-    # str2 = bin(i)
-    # str2 = hex(i)
-    # print(count, res[0] if str(str2)[0] == '0' else res[1], str(str2))
-    # if count == 1:
-        # print(str(str2))
-        # print(res[0] if str(str2)[0] == '0' else res[1], i)
-        # print(len(list(str(i).encode('utf-8'))))
-    # count -= 1
-
-
-# Основная функция запуска расчета
 def main():
-    print("args", argv)
-    list_args = [*argv]
-    print("list_args", list_args)
-    length_array = argv[2]
-    binary_array = argv[1]
-    count_bytes_last_symbol(binary_array, length_array)
-    # testing()
+    if len(argv) == 3:
+        print("len 3")
+        length_array = int(argv[2])
+        binary_array = argv[1].strip("'").replace('\\\\', '\\').encode('utf-8')
+        print("binary_array", binary_array)
+        count_bytes_last_symbol(binary_array, length_array)
+    else:
+        testing()
 
 
 def count_bytes_last_symbol(binary_array, length_array):
     len_array = int(length_array)
+
+    # convert massive from utf-8 coding in binary coding
     array_to_calculate = [bin(i)[2:].rjust(8, '0') for i in list(binary_array)]
 
+    # if massive in binary coding
+    # array_to_calculate = list(binary_array)
+
+    print("bin array: ", array_to_calculate)
+    double_bytes_symbol = False
+
     for byte_num in range(len(array_to_calculate)):
+        print(len_array, double_bytes_symbol)
+
+        if double_bytes_symbol:
+            double_bytes_symbol = False
+            continue
+
+        if int(array_to_calculate[byte_num][0]) == 1:
+            print("Yesss")
+            double_bytes_symbol = True
+
         if len_array == 1:
             print(array_to_calculate[byte_num][0])
-            if array_to_calculate[byte_num][0] == 0:
+            if int(array_to_calculate[byte_num][0]) == 0:
                 print("RESULT: Last symbol size one bytes")
             else:
                 print("RESULT: Last symbol size two byte")
-            pass
-        if array_to_calculate[byte_num][0] == 0:
-            byte_num += 1
+            break
+
+
+
+        print("array_to_calculate[byte_num][0] >> ", array_to_calculate[byte_num][0])
 
         len_array -= 1
+
 
 
 def testing():
     """
     testing count bytes in binary massive.
     Binary massive was encoding a seven length symbols massive: 'abęc1ññ'
-    python 001.py b'ab\xc4\x99c1\xc3\xb1\xc3\xb1' 7
+    Ensoding massive: b'ab\xc4\x99c1\xc3\xb1\xc3\xb1'
+    python M-soft.py b'ab\xc4\x99c1\xc3\xb1\xc3\xb1' 7
     """
 
-    binary_array = b'ab\xc4\x99c1\xc3\xb1\xc3\xb1'
-    length_array = 7
+    binary_array = b'ab\xc4\x99c1\xc3\xb1\xc3\xb1a1'
+    length_array = 9
 
     count_bytes_last_symbol(binary_array, length_array)
 
