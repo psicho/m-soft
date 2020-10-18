@@ -17,17 +17,17 @@ def main():
 
     # Start with arguments: " python M-soft.py ab\xc4\x99c1\xc3\xb1\xc3\xb1 7 "
     if len(argv) == 3:
-        print("len 3")
+        # print("len 3")
         length_array = int(argv[2])
         binary_array = argv[1]
         binary_array = str(binary_array).replace('\\\\', '\\')[2:-1]
-        print(binary_array)
+        # print(binary_array)
         binary_array = bytes(binary_array, encoding='utf-8', errors="replace")
 
         # binary_array = binary_array.encode('utf-8', errors='surrogateescape')
         # binary_array = binary_array.decode('ascii', errors='surrogateescape')
         # binary_array = bytearray(binary_array)
-        print("binary_array", binary_array)
+        # print("binary_array", binary_array)
         count_bytes_last_symbol(binary_array, length_array)
 
     # Start without arguments: " python M-soft.py "
@@ -42,32 +42,25 @@ def count_bytes_last_symbol(binary_array, length_array):
     # convert massive from utf-8 coding in binary coding
     array_to_calculate = [bin(i)[2:].rjust(8, '0') for i in list(binary_array)]
 
-    # if massive in binary coding
-    # array_to_calculate = list(binary_array)
-
-    print("bin array: ", array_to_calculate)
     double_bytes_symbol = False
 
     for byte_num in range(len(array_to_calculate)):
-        print(len_array, double_bytes_symbol)
+        # print(len_array, double_bytes_symbol)
 
         if double_bytes_symbol:
             double_bytes_symbol = False
             continue
 
         if int(array_to_calculate[byte_num][0]) == 1:
-            print("Yesss")
             double_bytes_symbol = True
 
         if len_array == 1:
-            print(array_to_calculate[byte_num][0])
+            # print(array_to_calculate[byte_num][0])
             if int(array_to_calculate[byte_num][0]) == 0:
                 print("RESULT: Last symbol size one bytes")
             else:
                 print("RESULT: Last symbol size two byte")
             break
-
-        print("array_to_calculate[byte_num][0] >> ", array_to_calculate[byte_num][0])
 
         len_array -= 1
 
