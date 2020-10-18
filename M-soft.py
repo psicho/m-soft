@@ -1,34 +1,41 @@
 """
-Задача:
-Создать функцию, которая имеет в качестве входных данных
-указанный массив байтов и его длину, и определяет, имеет ли последний
-символ в этом массиве длину 1 или 2 байта.
-
-Особенности:
-- Пример входного массива: b'abc1 \xc3\x90\xc2\xb2\xc3\x91\xc2\x8b\xc3\x91\xc2\x88\xc3\x90\xc2\xba\xc3\x91\xc2\x83'  ()
-- Каждый символ может быть закодирован 1 или 2 байтами
-- Если символ закодирован 1 байтом, то его старший бит равен 1
-- Если символ закодирован 2 байтами, то первый байт имеет старший
-бит, равный 0, тогда как второй байт может иметь любое значение
-для старшего бита (0 или 1), потому что известно, что нет символов
-закодированных 3,4,5 ... байтами
-
+- Input: we have an array of bytes that encode some text symbols/chars
+- Each symbol can be encoded with 1 or 2 bytes
+- If symbol is encoded with 1 byte then it's high bit equals to 1
+- If symbol is encoded with 2 bytes then first byte has high bit equal to 0 while second byte can have any value
+    for the high bit (0 or 1) because we know that there is no 3,4,5... bytes symbols
+- Challenge: Create a function that has as input specified array and it's length and finds out whether last symbol
+    in this array is 1 or 2-bytes long
 """
 
 from sys import argv
 
 
 def main():
+    import codecs
+    import sys
+
+    # Start with arguments: " python M-soft.py ab\xc4\x99c1\xc3\xb1\xc3\xb1 7 "
     if len(argv) == 3:
         print("len 3")
         length_array = int(argv[2])
-        binary_array = argv[1].strip("'").replace('\\\\', '\\').encode('utf-8')
+        binary_array = argv[1]
+        binary_array = str(binary_array).replace('\\\\', '\\')[2:-1]
+        print(binary_array)
+        binary_array = bytes(binary_array, encoding='utf-8', errors="replace")
+
+        # binary_array = binary_array.encode('utf-8', errors='surrogateescape')
+        # binary_array = binary_array.decode('ascii', errors='surrogateescape')
+        # binary_array = bytearray(binary_array)
         print("binary_array", binary_array)
         count_bytes_last_symbol(binary_array, length_array)
+
+    # Start without arguments: " python M-soft.py "
     else:
         testing()
 
 
+# Function of calculate size last symbol in bytes
 def count_bytes_last_symbol(binary_array, length_array):
     len_array = int(length_array)
 
@@ -60,24 +67,22 @@ def count_bytes_last_symbol(binary_array, length_array):
                 print("RESULT: Last symbol size two byte")
             break
 
-
-
         print("array_to_calculate[byte_num][0] >> ", array_to_calculate[byte_num][0])
 
         len_array -= 1
 
 
-
+# Testing function of calculate size last symbol in bytes
 def testing():
     """
-    testing count bytes in binary massive.
+    testing count size last symbol in bytes in binary massive.
     Binary massive was encoding a seven length symbols massive: 'abęc1ññ'
     Ensoding massive: b'ab\xc4\x99c1\xc3\xb1\xc3\xb1'
     python M-soft.py b'ab\xc4\x99c1\xc3\xb1\xc3\xb1' 7
     """
 
-    binary_array = b'ab\xc4\x99c1\xc3\xb1\xc3\xb1a1'
-    length_array = 9
+    binary_array = b'ab\xc4\x99c1\xc3\xb1\xc3\xb1'
+    length_array = 7
 
     count_bytes_last_symbol(binary_array, length_array)
 
